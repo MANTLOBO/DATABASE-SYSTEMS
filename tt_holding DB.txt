@@ -1,0 +1,1221 @@
+
+NAME:MANTLOBO MATSUTSU
+STUDENT NUMBER:901017400
+BSC IT Y2S2
+INDIVIDUAL ASSIGNMENT
+
+
+mysql> create database TT_Holding;
+Query OK, 1 row affected (0.13 sec)
+
+mysql> use TT_Holding;
+Database changed
+
+mysql> CREATE TABLE Persons (
+    ->     PersonID INT PRIMARY KEY,
+    ->     FirstName VARCHAR(20) NOT NULL,
+    ->     LastName VARCHAR(20) NOT NULL,
+    ->     Address VARCHAR(25),
+    ->     PhoneNumber INT(20),
+    ->     BirthDate VARCHAR(26)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.12 sec)
+
+
+mysql> INSERT into persons VALUES(1234,"THABANG","MOETI","BB12",55678901,"28_AUGUST_1995");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO persons VALUES(3456,"PULE","THAPELO","BB14",67890543,"23_JUNE_2001");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> INSERT INTO persons VALUES(2345,"LERATO","FIEE","BB13",53421673,"23_MAY_2002");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from persons;
++----------+-----------+----------+---------+-------------+----------------+
+| PersonID | FirstName | LastName | Address | PhoneNumber | BirthDate      |
++----------+-----------+----------+---------+-------------+----------------+
+|     1234 | THABANG   | MOETI    | BB12    |    55678901 | 28_AUGUST_1995 |
+|     2345 | LERATO    | FIEE     | BB13    |    53421673 | 23_MAY_2002    |
+|     3456 | PULE      | THAPELO  | BB14    |    67890543 | 23_JUNE_2001   |
++----------+-----------+----------+---------+-------------+----------------+
+3 rows in set (0.01 sec)
+
+
+mysql> CREATE TABLE Organizations (
+    ->     OrganizationID INT PRIMARY KEY,
+    ->     Name VARCHAR(20) NOT NULL,
+    ->     Address VARCHAR(20),
+    ->     PhoneNumber INT(20),
+    ->     BudgetNumber VARCHAR(20)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> INSERT INTO organizations VALUES(901,"HERBALIFE","BC13",53490673,"3");
+Query OK, 1 row affected (0.02 sec)
+
+
+mysql> INSERT INTO organizations VALUES(902,"TOYOTA","BC15",53589673,"5");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from organizations;
++----------------+-----------+---------+-------------+--------------+
+| OrganizationID | Name      | Address | PhoneNumber | BudgetNumber |
++----------------+-----------+---------+-------------+--------------+
+|            901 | HERBALIFE | BC13    |    53490673 | 3            |
+|            902 | TOYOTA    | BC15    |    53589673 | 5            |
++----------------+-----------+---------+-------------+--------------+
+2 rows in set (0.00 sec)
+
+mysql> CREATE TABLE EmploymentType (
+    ->     EmploymentTypeID INT PRIMARY KEY,
+    ->     EmploymentTypeName VARCHAR(30) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> INSERT INTO EmploymentType VALUES(901,"PERMANENT");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from EmploymentType;
++------------------+--------------------+
+| EmploymentTypeID | EmploymentTypeName |
++------------------+--------------------+
+|              901 | PERMANENT          |
++------------------+--------------------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> CREATE TABLE Employment (
+    ->     EmploymentID INT PRIMARY KEY,
+    ->     PersonID INT(22),
+    ->     OrganizationID INT(10),
+    ->     EmploymentDate VARCHAR(20),
+    ->     TerminationDate VARCHAR(20),
+    ->     Bonus int(10),
+    ->     ExtraHours INT(7),
+    ->     FOREIGN KEY (PersonID) REFERENCES Persons(PersonID),
+    ->     FOREIGN KEY (OrganizationID) REFERENCES Organizations(OrganizationID)
+    -> );
+Query OK, 0 rows affected, 4 warnings (0.18 sec)
+
+mysql> INSERT INTO Employment VALUES(1,1234,901,"23_MARCH_2024","23_MARCH_2025",200,2);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Employment;
++--------------+----------+----------------+----------------+-----------------+-------+------------+
+| EmploymentID | PersonID | OrganizationID | EmploymentDate | TerminationDate | Bonus | ExtraHours |
++--------------+----------+----------------+----------------+-----------------+-------+------------+
+|            1 |     1234 |            901 | 23_MARCH_2024  | 23_MARCH_2025   |   200 |          2 |
++--------------+----------+----------------+----------------+-----------------+-------+------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE TABLE PersonEmploymentType (
+    ->     PersonEmploymentTypeID INT(4) PRIMARY KEY,
+    ->     PersonID INT(10),
+    ->     EmploymentID INT(4),
+    ->     EmploymentTypeID INT(10),
+    ->     StartDate VARCHAR(22),
+    ->     EndDate VARCHAR(22),
+    ->     FOREIGN KEY (PersonID) REFERENCES Persons(PersonID),
+    ->     FOREIGN KEY (EmploymentID) REFERENCES Employment(EmploymentID),
+    ->     FOREIGN KEY (EmploymentTypeID) REFERENCES EmploymentType(EmploymentTypeID)
+    -> );
+Query OK, 0 rows affected, 4 warnings (0.12 sec)
+
+mysql> INSERT INTO PersonEmploymentType VALUES(101,1234,1,901,"23_MARCH_2023","23_MARCH_2025");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from PersonEmploymentType;
++------------------------+----------+--------------+------------------+---------------+---------------+
+| PersonEmploymentTypeID | PersonID | EmploymentID | EmploymentTypeID | StartDate     | EndDate       |
++------------------------+----------+--------------+------------------+---------------+---------------+
+|                    101 |     1234 |            1 |              901 | 23_MARCH_2023 | 23_MARCH_2025 |
++------------------------+----------+--------------+------------------+---------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE TABLE Positions (
+    ->     PositionID INT(5) PRIMARY KEY,
+    ->     Title VARCHAR(30) NOT NULL,
+    ->     OrganizationID INT(10),
+    ->     FOREIGN KEY (OrganizationID) REFERENCES Organizations(OrganizationID)
+    -> );
+Query OK, 0 rows affected, 2 warnings (0.09 sec)
+
+
+mysql> INSERT INTO Positions VALUES(11,"MANAGER",901);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Positions;
++------------+---------+----------------+
+| PositionID | Title   | OrganizationID |
++------------+---------+----------------+
+|         11 | MANAGER |            901 |
++------------+---------+----------------+
+1 row in set (0.00 sec)
+
+
+mysql> CREATE TABLE PersonPosition (
+    ->     PersonPositionID INT(4) PRIMARY KEY,
+    ->     PersonID INT(7),
+    ->     PositionID INT(10),
+    ->     StartDate VARCHAR(20),
+    ->     EndDate VARCHAR(13),
+    ->     Salary INT(10),
+    ->     EmploymentTypeID INT(10),
+    ->     FOREIGN KEY (PersonID) REFERENCES Persons(PersonID),
+    ->     FOREIGN KEY (PositionID) REFERENCES Positions(PositionID),
+    ->     FOREIGN KEY (EmploymentTypeID) REFERENCES EmploymentType(EmploymentTypeID)
+    -> );
+Query OK, 0 rows affected, 5 warnings (0.11 sec)
+
+mysql> INSERT INTO PersonPosition VALUES(12,1234,11,"28_MARCH_2023","28_MARCH_2025",2500,901);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from PersonPosition;
++------------------+----------+------------+---------------+---------------+--------+------------------+
+| PersonPositionID | PersonID | PositionID | StartDate     | EndDate       | Salary | EmploymentTypeID |
++------------------+----------+------------+---------------+---------------+--------+------------------+
+|               12 |     1234 |         11 | 28_MARCH_2023 | 28_MARCH_2025 |   2500 |              901 |
++------------------+----------+------------+---------------+---------------+--------+------------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO Persons VALUES
+    -> (1235, "lebohang", "DOE", "BB15", 65511122, "15_JANUARY_1994"),
+    -> (1236, "makopo", "SMITH", "BB16", 55432233, "10_FEBRUARY_1988"),
+    -> (1237, "reaoboka", "BROWN", "BB17", 55533344, "05_MARCH_2005"),
+    -> (1238, "mpine", "DAVIS", "BB18", 55544455, "20_APRIL_1992"),
+    -> (1239, "mamokete", "WILSON", "BB19", 67435066, "30_MAY_1983"),
+    -> (1240, "nthabiseng", "TAYLOR", "BB20", 55432677, "25_JUNE_2005"),
+    -> (1241, "likhapha", "ANDERSON", "BB21", 55577788, "12_JULY_1991"),
+    -> (1242, "matela", "THOMAS", "BB22", 55588899, "17_AUGUST_2000"),
+    -> (1243, "phethile", "JACKSON", "BB23", 55599900, "09_SEPTEMBER_2000"),
+    -> (1244, "mabatho", "WHITE", "BB24", 59080011, "22_OCTOBER_1999"),
+    -> (1245, "matshoele", "HARRIS", "BB25", 67512345, "15_NOVEMBER_2007");
+Query OK, 11 rows affected (0.17 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO personemploymenttype (PersonEmploymentTypeID, PersonID, EmploymentID, EmploymentTypeID, StartDate, EndDate) VALUES
+
+    -> (102, 1235, 2, 902, '01_APRIL_2024', '01_APRIL_2025'),
+    -> (103, 1236, 3, 903, '15_MAY_2024', '15_MAY_2025'),
+    -> (104, 1237, 4, 904, '10_JUNE_2024', '10_JUNE_2025'),
+    -> (105, 1238, 5, 905, '25_JULY_2024', '25_JULY_2025'),
+    -> (106, 1239, 6, 906, '05_AUGUST_2024', '05_AUGUST_2025'),
+    -> (107, 1240, 7, 907, '20_SEPTEMBER_2024', '20_SEPTEMBER_2025'),
+    -> (108, 1241, 8, 908, '15_OCTOBER_2024', '15_OCTOBER_2025'),
+    -> (109, 1242, 9, 909, '30_NOVEMBER_2024', '30_NOVEMBER_2025'),
+    -> (110, 1243, 10, 910, '10_DECEMBER_2024', '10_DECEMBER_2025'),
+    -> (111, 1244, 11, 911, '05_JANUARY_2025', '05_JANUARY_2026'),
+    -> (112, 1245, 12, 901, '12_FEBRUARY_2025', '12_FEBRUARY_2026');
+Query OK, 11 rows affected (0.05 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from personemploymenttype;
++------------------------+----------+--------------+------------------+-------------------+-------------------+
+| PersonEmploymentTypeID | PersonID | EmploymentID | EmploymentTypeID | StartDate         | EndDate           |
++------------------------+----------+--------------+------------------+-------------------+-------------------+
+|                    101 |     1234 |            1 |              901 | 23_MARCH_2023     | 23_MARCH_2025     |
+|                    102 |     1235 |            2 |              902 | 01_APRIL_2024     | 01_APRIL_2025     |
+|                    103 |     1236 |            3 |              903 | 15_MAY_2024       | 15_MAY_2025       |
+|                    104 |     1237 |            4 |              904 | 10_JUNE_2024      | 10_JUNE_2025      |
+|                    105 |     1238 |            5 |              905 | 25_JULY_2024      | 25_JULY_2025      |
+|                    106 |     1239 |            6 |              906 | 05_AUGUST_2024    | 05_AUGUST_2025    |
+|                    107 |     1240 |            7 |              907 | 20_SEPTEMBER_2024 | 20_SEPTEMBER_2025 |
+|                    108 |     1241 |            8 |              908 | 15_OCTOBER_2024   | 15_OCTOBER_2025   |
+|                    109 |     1242 |            9 |              909 | 30_NOVEMBER_2024  | 30_NOVEMBER_2025  |
+|                    110 |     1243 |           10 |              910 | 10_DECEMBER_2024  | 10_DECEMBER_2025  |
+|                    111 |     1244 |           11 |              911 | 05_JANUARY_2025   | 05_JANUARY_2026   |
+|                    112 |     1245 |           12 |              901 | 12_FEBRUARY_2025  | 12_FEBRUARY_2026  |
++------------------------+----------+--------------+------------------+-------------------+-------------------+
+12 rows in set (0.00 sec)
+ysql>
+mysql> CREATE VIEW person_employment_details AS
+    -> SELECT
+    ->     pe.PersonEmploymentTypeID,
+    ->     pe.PersonID,
+    ->     pe.EmploymentID,
+    ->     e.EmploymentTypeName,
+    ->     pe.StartDate,
+    ->     pe.EndDate
+    -> FROM
+    ->     personemploymenttype pe
+    -> JOIN
+    ->     employmenttype e ON pe.EmploymentTypeID = e.EmploymentTypeID;
+Query OK, 0 rows affected (0.03 sec)
+
+
+
+mysql> CREATE VIEW active_person_employment_types AS
+    -> SELECT
+    ->     PersonEmploymentTypeID,
+    ->     PersonID,
+    ->     EmploymentID,
+    ->     EmploymentTypeID,
+    ->     StartDate,
+    ->     EndDate
+    -> FROM
+    ->     personemploymenttype
+    -> WHERE
+    ->     CURDATE() BETWEEN STR_TO_DATE(StartDate, '%d_%M_%Y') AND STR_TO_DATE(EndDate, '%d_%M_%Y');
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> select * from active_person_employment_types;
++------------------------+----------+--------------+------------------+-------------------+-------------------+
+| PersonEmploymentTypeID | PersonID | EmploymentID | EmploymentTypeID | StartDate         | EndDate           |
++------------------------+----------+--------------+------------------+-------------------+-------------------+
+|                    101 |     1234 |            1 |              901 | 23_MARCH_2023     | 23_MARCH_2025     |
+|                    102 |     1235 |            2 |              902 | 01_APRIL_2024     | 01_APRIL_2025     |
+|                    103 |     1236 |            3 |              903 | 15_MAY_2024       | 15_MAY_2025       |
+|                    104 |     1237 |            4 |              904 | 10_JUNE_2024      | 10_JUNE_2025      |
+|                    105 |     1238 |            5 |              905 | 25_JULY_2024      | 25_JULY_2025      |
+|                    106 |     1239 |            6 |              906 | 05_AUGUST_2024    | 05_AUGUST_2025    |
+|                    107 |     1240 |            7 |              907 | 20_SEPTEMBER_2024 | 20_SEPTEMBER_2025 |
+|                    108 |     1241 |            8 |              908 | 15_OCTOBER_2024   | 15_OCTOBER_2025   |
+|                    109 |     1242 |            9 |              909 | 30_NOVEMBER_2024  | 30_NOVEMBER_2025  |
+|                    110 |     1243 |           10 |              910 | 10_DECEMBER_2024  | 10_DECEMBER_2025  |
+|                    111 |     1244 |           11 |              911 | 05_JANUARY_2025   | 05_JANUARY_2026   |
+|                    112 |     1245 |           12 |              901 | 12_FEBRUARY_2025  | 12_FEBRUARY_2026  |
++------------------------+----------+--------------+------------------+-------------------+-------------------+
+12 rows in set (0.01 sec)
+
+mysql>
+
+
+mysql> DELIMITER $$
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_personemploymenttype
+    -> BEFORE DELETE ON personemploymenttype
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TRIGGER after_delete_personemploymenttype
+    -> AFTER DELETE ON personemploymenttype
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> CREATE TRIGGER before_update_personemploymenttype
+    -> BEFORE UPDATE ON personemploymenttype
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     IF NEW.EndDate < NEW.StartDate THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'EndDate cannot be earlier than StartDate';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> CREATE TRIGGER after_update_personemploymenttype
+    -> AFTER UPDATE ON personemploymenttype
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TRIGGER before_insert_personemploymenttype
+    -> BEFORE INSERT ON personemploymenttype
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    ->     IF NEW.StartDate > NEW.EndDate THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'StartDate must be before EndDate';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> CREATE TRIGGER after_insert_personemploymenttype
+    -> AFTER INSERT ON personemploymenttype
+    -> FOR EACH ROW
+    -> BEGIN
+    ->
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>
+mysql> select * from persons
+    -> ;
++----------+------------+----------+---------+-------------+-------------------+
+| PersonID | FirstName  | LastName | Address | PhoneNumber | BirthDate         |
++----------+------------+----------+---------+-------------+-------------------+
+|     1234 | THABANG    | MOETI    | BB12    |    55678901 | 28_AUGUST_1995    |
+|     1235 | lebohang   | DOE      | BB15    |    65511122 | 15_JANUARY_1994   |
+|     1236 | makopo     | SMITH    | BB16    |    55432233 | 10_FEBRUARY_1988  |
+|     1237 | reaoboka   | BROWN    | BB17    |    55533344 | 05_MARCH_2005     |
+|     1238 | mpine      | DAVIS    | BB18    |    55544455 | 20_APRIL_1992     |
+|     1239 | mamokete   | WILSON   | BB19    |    67435066 | 30_MAY_1983       |
+|     1240 | nthabiseng | TAYLOR   | BB20    |    55432677 | 25_JUNE_2005      |
+|     1241 | likhapha   | ANDERSON | BB21    |    55577788 | 12_JULY_1991      |
+|     1242 | matela     | THOMAS   | BB22    |    55588899 | 17_AUGUST_2000    |
+|     1243 | phethile   | JACKSON  | BB23    |    55599900 | 09_SEPTEMBER_2000 |
+|     1244 | mabatho    | WHITE    | BB24    |    59080011 | 22_OCTOBER_1999   |
+|     1245 | matshoele  | HARRIS   | BB25    |    67512345 | 15_NOVEMBER_2007  |
+|     2345 | LERATO     | FIEE     | BB13    |    53421673 | 23_MAY_2002       |
+|     3456 | PULE       | THAPELO  | BB14    |    67890543 | 23_JUNE_2001      |
++----------+------------+----------+---------+-------------+-------------------+
+14 rows in set (0.04 sec)
+mysql> CREATE TRIGGER after_insert_person
+    -> AFTER INSERT ON Persons
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Person_Log (message, log_time)
+    ->     VALUES (CONCAT('Inserted person: ', NEW.FirstName, ' ', NEW.LastName), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_update_person
+    -> BEFORE UPDATE ON Persons
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     SET NEW.updated_at = NOW();
+    -> END$$
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_update_person
+    -> AFTER UPDATE ON Persons
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Person_Log (message, log_time)
+    ->     VALUES (CONCAT('Updated person: ', NEW.FirstName, ' ', NEW.LastName), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_person
+    -> BEFORE DELETE ON Persons
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF TIMESTAMPDIFF(YEAR, STR_TO_DATE(OLD.BirthDate, '%d_%M_%Y'), CURDATE()) < 18 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Cannot delete persons under 18 years old';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+
+mysql> CREATE TRIGGER after_delete_person
+    -> AFTER DELETE ON Persons
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Person_Log (message, log_time)
+    ->     VALUES (CONCAT('Deleted person: ', OLD.FirstName, ' ', OLD.LastName), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> DELIMITER ;
+
+
+mysql> INSERT INTO Organizations VALUES
+    -> (903, "FORD", "BC16", 53490674, "7"),
+    -> (904, "TESLA", "BC17", 53490675, "9"),
+    -> (905, "BMW", "BC18", 53490676, "8"),
+    -> (906, "MERCEDES", "BC19", 53490677, "6"),
+    -> (907, "HONDA", "BC20", 53490678, "4"),
+    -> (908, "NISSAN", "BC21", 53490679, "2"),
+    -> (909, "APPLE", "BC22", 53490680, "10"),
+    -> (910, "MICROSOFT", "BC23", 53490681, "11"),
+    -> (911, "GOOGLE", "BC24", 53490682, "12"),
+    -> (912, "AMAZON", "BC25", 53490683, "13");
+Query OK, 10 rows affected (0.02 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Employment VALUES
+    -> (2, 1235, 902, "01_APRIL_2024", "01_APRIL_2025", 300, 5),
+    -> (3, 1236, 903, "15_MAY_2024", "15_MAY_2025", 400, 8),
+    -> (4, 1237, 904, "10_JUNE_2024", "10_JUNE_2025", 500, 3),
+    -> (5, 1238, 905, "25_JULY_2024", "25_JULY_2025", 600, 2),
+    -> (6, 1239, 906, "05_AUGUST_2024", "05_AUGUST_2025", 700, 7),
+    -> (7, 1240, 907, "20_SEPTEMBER_2024", "20_SEPTEMBER_2025", 800, 4),
+    -> (8, 1241, 908, "15_OCTOBER_2024", "15_OCTOBER_2025", 900, 6),
+    -> (9, 1242, 909, "30_NOVEMBER_2024", "30_NOVEMBER_2025", 1000, 9),
+    -> (10, 1243, 910, "10_DECEMBER_2024", "10_DECEMBER_2025", 1100, 1),
+    -> (11, 1244, 911, "05_JANUARY_2025", "05_JANUARY_2026", 1200, 2),
+    -> (12, 1245, 901, "12_FEBRUARY_2025", "12_FEBRUARY_2026", 1300, 3);
+Query OK, 11 rows affected (0.04 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Positions VALUES
+    -> (12, "ENGINEER", 902),
+    -> (13, "TECHNICIAN", 903),
+    -> (14, "DEVELOPER", 904),
+    -> (15, "ANALYST", 905),
+    -> (16, "DESIGNER", 906),
+    -> (17, "SUPERVISOR", 907),
+    -> (18, "DIRECTOR", 908),
+    -> (19, "ASSISTANT", 909),
+    -> (20, "OPERATOR", 910),
+    -> (21, "CONSULTANT", 911),
+    -> (22, "CEO", 901);
+Query OK, 11 rows affected (0.02 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO EmploymentType VALUES
+    -> (902, "PERMANENT"),
+    -> (903, "PART-TIME"),
+    -> (904, "PART-TIME"),
+    -> (905, "PART-TIME"),
+    -> (906, "PART-TIME"),
+    -> (907, "PERMANENT"),
+    -> (908, "PART-TIME"),
+    -> (909, "PART-TIME"),
+    -> (910, "PART-TIME"),
+    -> (911, "PERMANENT");
+Query OK, 10 rows affected (0.04 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+
+mysql> INSERT INTO PersonPosition VALUES
+    ->     (13, 1235, 12, '2024-04-01', '2025-04-01', 3000, 902),
+    ->     (14, 1236, 13, '2024-05-15', '2025-05-15', 3200, 903),
+    ->     (15, 1237, 14, '2024-06-10', '2025-06-10', 3400, 904),
+    ->     (16, 1238, 15, '2024-07-25', '2025-07-25', 3600, 905),
+    ->     (17, 1239, 16, '2024-08-05', '2025-08-05', 3800, 906),
+    ->    (18, 1240, 17, '2024-06-20', '2025-06-20', 4000, 907),
+    ->     (19, 1241, 18, '2024-10-15', '2025-10-15', 4200, 908),
+    ->     (20, 1242, 19, '2024-11-30', '2025-11-30', 4400, 909),
+    ->     (21, 1243, 20, '2024-12-10', '2025-12-10', 4600, 910),
+    ->     (22, 1244, 21, '2025-01-05', '2026-01-05', 4800, 911),
+    ->     (23, 1245, 22, '2025-02-12', '2026-02-12', 5000, 901);
+Query OK, 11 rows affected (0.02 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from personposition;
++------------------+----------+------------+---------------+---------------+--------+------------------+
+| PersonPositionID | PersonID | PositionID | StartDate     | EndDate       | Salary | EmploymentTypeID |
++------------------+----------+------------+---------------+---------------+--------+------------------+
+|               12 |     1234 |         11 | 28_MARCH_2023 | 28_MARCH_2025 |   2500 |              901 |
+|               13 |     1235 |         12 | 2024-04-01    | 2025-04-01    |   3000 |              902 |
+|               14 |     1236 |         13 | 2024-05-15    | 2025-05-15    |   3200 |              903 |
+|               15 |     1237 |         14 | 2024-06-10    | 2025-06-10    |   3400 |              904 |
+|               16 |     1238 |         15 | 2024-07-25    | 2025-07-25    |   3600 |              905 |
+|               17 |     1239 |         16 | 2024-08-05    | 2025-08-05    |   3800 |              906 |
+|               18 |     1240 |         17 | 2024-06-20    | 2025-06-20    |   4000 |              907 |
+|               19 |     1241 |         18 | 2024-10-15    | 2025-10-15    |   4200 |              908 |
+|               20 |     1242 |         19 | 2024-11-30    | 2025-11-30    |   4400 |              909 |
+|               21 |     1243 |         20 | 2024-12-10    | 2025-12-10    |   4600 |              910 |
+|               22 |     1244 |         21 | 2025-01-05    | 2026-01-05    |   4800 |              911 |
+|               23 |     1245 |         22 | 2025-02-12    | 2026-02-12    |   5000 |              901 |
++------------------+----------+------------+---------------+---------------+--------+------------------+
+12 rows in set (0.01 sec)
+
+mysql> CREATE TRIGGER after_update_personposition
+    -> AFTER UPDATE ON PersonPosition
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Position_Log (message, log_time)
+    ->     VALUES (CONCAT('Updated position ID ', NEW.PositionID, ' for person ID ', NEW.PersonID), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_personposition
+    -> BEFORE DELETE ON PersonPosition
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF CURDATE() BETWEEN STR_TO_DATE(OLD.StartDate, '%Y-%m-%d') AND STR_TO_DATE(OLD.EndDate, '%Y-%m-%d') THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Cannot delete an active position assignment';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_delete_personposition
+    -> AFTER DELETE ON PersonPosition
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Position_Log (message, log_time)
+    ->     VALUES (CONCAT('Removed position ID ', OLD.PositionID, ' from person ID ', OLD.PersonID), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>
+mysql>
+mysql>
+mysql> select * from employmenttype;
++------------------+--------------------+
+| EmploymentTypeID | EmploymentTypeName |
++------------------+--------------------+
+|              901 | PERMANENT          |
+|              902 | PERMANENT          |
+|              903 | PART-TIME          |
+|              904 | PART-TIME          |
+|              905 | PART-TIME          |
+|              906 | PART-TIME          |
+|              907 | PERMANENT          |
+|              908 | PART-TIME          |
+|              909 | PART-TIME          |
+|              910 | PART-TIME          |
+|              911 | PERMANENT          |
++------------------+--------------------+
+11 rows in set (0.01 sec)
+mysql> CREATE TRIGGER before_insert_employmenttype
+    -> BEFORE INSERT ON EmploymentType
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF EXISTS (SELECT 1 FROM EmploymentType WHERE EmploymentTypeID = NEW.EmploymentTypeID) THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'EmploymentTypeID must be unique';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_insert_employmenttype
+    -> AFTER INSERT ON EmploymentType
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Employment_Log (message, log_time)
+    ->     VALUES (CONCAT('Added employment type: ', NEW.EmploymentTypeName), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_update_employmenttype
+    -> BEFORE UPDATE ON EmploymentType
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF OLD.EmploymentTypeID <> NEW.EmploymentTypeID THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'EmploymentTypeID cannot be changed';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_update_employmenttype
+    -> AFTER UPDATE ON EmploymentType
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Employment_Log (message, log_time)
+    ->     VALUES (CONCAT('Updated employment type: ', NEW.EmploymentTypeName), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_employmenttype
+    -> BEFORE DELETE ON EmploymentType
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF EXISTS (SELECT 1 FROM PersonPosition WHERE EmploymentTypeID = OLD.EmploymentTypeID) THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Cannot delete an employment type that is in use';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_delete_employmenttype
+    -> AFTER DELETE ON EmploymentType
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Employment_Log (message, log_time)
+    ->     VALUES (CONCAT('Deleted employment type: ', OLD.EmploymentTypeName), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+
+mysql> select * from positions;
++------------+------------+----------------+
+| PositionID | Title      | OrganizationID |
++------------+------------+----------------+
+|         11 | MANAGER    |            901 |
+|         12 | ENGINEER   |            902 |
+|         13 | TECHNICIAN |            903 |
+|         14 | DEVELOPER  |            904 |
+|         15 | ANALYST    |            905 |
+|         16 | DESIGNER   |            906 |
+|         17 | SUPERVISOR |            907 |
+|         18 | DIRECTOR   |            908 |
+|         19 | ASSISTANT  |            909 |
+|         20 | OPERATOR   |            910 |
+|         21 | CONSULTANT |            911 |
+|         22 | CEO        |            901 |
++------------+------------+----------------+
+12 rows in set (0.00 sec)
+ CREATE TRIGGER before_insert_positions
+    -> BEFORE INSERT ON Positions
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF (SELECT COUNT(*) FROM Positions WHERE PositionID = NEW.PositionID) > 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'PositionID already exists';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TRIGGER after_insert_positions
+    -> AFTER INSERT ON Positions
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Positions_Log (message, log_time)
+    ->     VALUES (CONCAT('Added position: ', NEW.Title), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_update_positions
+    -> BEFORE UPDATE ON Positions
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF NEW.Title IS NULL THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Title cannot be NULL';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_update_positions
+    -> AFTER UPDATE ON Positions
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Positions_Log (message, log_time)
+    ->     VALUES (CONCAT('Updated position: ', NEW.Title), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_positions
+    -> BEFORE DELETE ON Positions
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF (SELECT COUNT(*) FROM PersonPosition WHERE PositionID = OLD.PositionID) > 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Cannot delete a position that is assigned to a person';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_delete_positions
+    -> AFTER DELETE ON Positions
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Positions_Log (message, log_time)
+    ->     VALUES (CONCAT('Deleted position: ', OLD.Title), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>
+mysql>
+mysql> select * from employment;
++--------------+----------+----------------+-------------------+-------------------+-------+------------+
+| EmploymentID | PersonID | OrganizationID | EmploymentDate    | TerminationDate   | Bonus | ExtraHours |
++--------------+----------+----------------+-------------------+-------------------+-------+------------+
+|            1 |     1234 |            901 | 23_MARCH_2024     | 23_MARCH_2025     |   200 |          2 |
+|            2 |     1235 |            902 | 01_APRIL_2024     | 01_APRIL_2025     |   300 |          5 |
+|            3 |     1236 |            903 | 15_MAY_2024       | 15_MAY_2025       |   400 |          8 |
+|            4 |     1237 |            904 | 10_JUNE_2024      | 10_JUNE_2025      |   500 |          3 |
+|            5 |     1238 |            905 | 25_JULY_2024      | 25_JULY_2025      |   600 |          2 |
+|            6 |     1239 |            906 | 05_AUGUST_2024    | 05_AUGUST_2025    |   700 |          7 |
+|            7 |     1240 |            907 | 20_SEPTEMBER_2024 | 20_SEPTEMBER_2025 |   800 |          4 |
+|            8 |     1241 |            908 | 15_OCTOBER_2024   | 15_OCTOBER_2025   |   900 |          6 |
+|            9 |     1242 |            909 | 30_NOVEMBER_2024  | 30_NOVEMBER_2025  |  1000 |          9 |
+|           10 |     1243 |            910 | 10_DECEMBER_2024  | 10_DECEMBER_2025  |  1100 |          1 |
+|           11 |     1244 |            911 | 05_JANUARY_2025   | 05_JANUARY_2026   |  1200 |          2 |
+|           12 |     1245 |            901 | 12_FEBRUARY_2025  | 12_FEBRUARY_2026  |  1300 |          3 |
++--------------+----------+----------------+-------------------+-------------------+-------+------------+
+12 rows in set (0.00 sec)
+> CREATE TRIGGER before_insert_employment
+    -> BEFORE INSERT ON Employment
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF NEW.EmploymentDate > CURDATE() THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Employment date cannot be in the future';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.07 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_insert_employment
+    -> AFTER INSERT ON Employment
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Employment_Log (message, log_time)
+    ->     VALUES (CONCAT('New employment added for PersonID: ', NEW.PersonID), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_update_employment
+    -> BEFORE UPDATE ON Employment
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF NEW.TerminationDate < NEW.EmploymentDate THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Termination date cannot be before employment date';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_update_employment
+    -> AFTER UPDATE ON Employment
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Employment_Log (message, log_time)
+    ->     VALUES (CONCAT('Employment record updated for PersonID: ', NEW.PersonID), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_employment
+    -> BEFORE DELETE ON Employment
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF OLD.TerminationDate > CURDATE() THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Cannot delete active employment records';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_delete_employment
+    -> AFTER DELETE ON Employment
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Employment_Log (message, log_time)
+    ->     VALUES (CONCAT('Employment record deleted for PersonID: ', OLD.PersonID), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>mysql> CREATE VIEW PersonsBasicView AS
+    -> SELECT personID, Address, firstName, lastName FROM Persons;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> drop view EmployeeEmploymentDetails;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE VIEW PersonsDetailedView AS
+    -> SELECT * FROM Persons;
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> CREATE VIEW OrganizationsBasicView AS
+    -> select organizationID, name  from organizations;
+Query OK, 0 rows affected (0.07 sec)
+
+
+
+mysql> select * from OrganizationsBasicView;
++----------------+-----------+
+| organizationID | name      |
++----------------+-----------+
+|            901 | HERBALIFE |
+|            902 | TOYOTA    |
+|            903 | FORD      |
+|            904 | TESLA     |
+|            905 | BMW       |
+|            906 | MERCEDES  |
+|            907 | HONDA     |
+|            908 | NISSAN    |
+|            909 | APPLE     |
+|            910 | MICROSOFT |
+|            911 | GOOGLE    |
+|            912 | AMAZON    |
++----------------+-----------+
+12 rows in set (0.03 sec)
+
+mysql> CREATE VIEW OrganizationsDetailedView AS
+    -> SELECT * FROM Organizations;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from  OrganizationsDetailedView;
++----------------+-----------+---------+-------------+--------------+
+| OrganizationID | Name      | Address | PhoneNumber | BudgetNumber |
++----------------+-----------+---------+-------------+--------------+
+|            901 | HERBALIFE | BC13    |    53490673 | 3            |
+|            902 | TOYOTA    | BC15    |    53589673 | 5            |
+|            903 | FORD      | BC16    |    53490674 | 7            |
+|            904 | TESLA     | BC17    |    53490675 | 9            |
+|            905 | BMW       | BC18    |    53490676 | 8            |
+|            906 | MERCEDES  | BC19    |    53490677 | 6            |
+|            907 | HONDA     | BC20    |    53490678 | 4            |
+|            908 | NISSAN    | BC21    |    53490679 | 2            |
+|            909 | APPLE     | BC22    |    53490680 | 10           |
+|            910 | MICROSOFT | BC23    |    53490681 | 11           |
+|            911 | GOOGLE    | BC24    |    53490682 | 12           |
+|            912 | AMAZON    | BC25    |    53490683 | 13           |
++----------------+-----------+---------+-------------+--------------+
+12 rows in set (0.02 sec)
+mysql> DELIMITER $$
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_insert_organizations
+    -> BEFORE INSERT ON Organizations
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF (SELECT COUNT(*) FROM Organizations WHERE OrganizationID = NEW.OrganizationID) > 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'OrganizationID already exists';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.07 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_insert_organizations
+    -> AFTER INSERT ON Organizations
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Organizations_Log (message, log_time)
+    ->     VALUES (CONCAT('Added organization: ', NEW.Name), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_update_organizations
+    -> BEFORE UPDATE ON Organizations
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF NEW.BudgetNumber < 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'BudgetNumber cannot be negative';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_update_organizations
+    -> AFTER UPDATE ON Organizations
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Organizations_Log (message, log_time)
+    ->     VALUES (CONCAT('Updated organization: ', NEW.Name), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER before_delete_organizations
+    -> BEFORE DELETE ON Organizations
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     IF (SELECT COUNT(*) FROM Employment WHERE OrganizationID = OLD.OrganizationID) > 0 THEN
+    ->         SIGNAL SQLSTATE '45000'
+    ->         SET MESSAGE_TEXT = 'Cannot delete an organization assigned to employment records';
+    ->     END IF;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> CREATE TRIGGER after_delete_organizations
+    -> AFTER DELETE ON Organizations
+    -> FOR EACH ROW
+    -> BEGIN
+    ->     INSERT INTO Organizations_Log (message, log_time)
+    ->     VALUES (CONCAT('Deleted organization: ', OLD.Name), NOW());
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;mysql> CREATE VIEW PermanentEmployees AS
+    -> SELECT EmploymentTypeID, EmploymentTypeName
+    -> FROM EmploymentType
+    -> WHERE EmploymentTypeName = 'PERMANENT';
+Query OK, 0 rows affected (0.22 sec)
+
+mysql> select * from permanentemployees;
++------------------+--------------------+
+| EmploymentTypeID | EmploymentTypeName |
++------------------+--------------------+
+|              901 | PERMANENT          |
+|              902 | PERMANENT          |
+|              907 | PERMANENT          |
+|              911 | PERMANENT          |
++------------------+--------------------+
+4 rows in set (0.02 sec)
+mysql> CREATE VIEW PartTimeEmployees AS
+    -> SELECT EmploymentTypeID, EmploymentTypeName
+    -> FROM EmploymentType
+    -> WHERE EmploymentTypeName = 'PART-TIME';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from parttimeemployees;
++------------------+--------------------+
+| EmploymentTypeID | EmploymentTypeName |
++------------------+--------------------+
+|              903 | PART-TIME          |
+|              904 | PART-TIME          |
+|              905 | PART-TIME          |
+|              906 | PART-TIME          |
+|              908 | PART-TIME          |
+|              909 | PART-TIME          |
+|              910 | PART-TIME          |
++------------------+--------------------+
+7 rows in set (0.00 sec)
+mysql> CREATE VIEW PermanentEmployment AS
+    -> SELECT e.EmploymentID, e.PersonID, e.OrganizationID, e.EmploymentDate,
+    ->        e.TerminationDate, e.Bonus, e.ExtraHours
+    -> FROM employment e
+    -> JOIN EmploymentType et ON e.OrganizationID = et.EmploymentTypeID
+    -> WHERE et.EmploymentTypeName = 'PERMANENT';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from permanentemployment;
++--------------+----------+----------------+-------------------+-------------------+-------+------------+
+| EmploymentID | PersonID | OrganizationID | EmploymentDate    | TerminationDate   | Bonus | ExtraHours |
++--------------+----------+----------------+-------------------+-------------------+-------+------------+
+|            1 |     1234 |            901 | 23_MARCH_2024     | 23_MARCH_2025     |   200 |          2 |
+|           12 |     1245 |            901 | 12_FEBRUARY_2025  | 12_FEBRUARY_2026  |  1300 |          3 |
+|            2 |     1235 |            902 | 01_APRIL_2024     | 01_APRIL_2025     |   300 |          5 |
+|            7 |     1240 |            907 | 20_SEPTEMBER_2024 | 20_SEPTEMBER_2025 |   800 |          4 |
+|           11 |     1244 |            911 | 05_JANUARY_2025   | 05_JANUARY_2026   |  1200 |          2 |
++--------------+----------+----------------+-------------------+-------------------+-------+------------+
+5 rows in set (0.01 sec)
+
+mysql> CREATE VIEW PartTimeEmployment AS
+    -> SELECT e.EmploymentID, e.PersonID, e.OrganizationID, e.EmploymentDate,
+    ->        e.TerminationDate, e.Bonus, e.ExtraHours
+    -> FROM employment e
+    -> JOIN EmploymentType et ON e.OrganizationID = et.EmploymentTypeID
+    -> WHERE et.EmploymentTypeName = 'PART-TIME';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from parttimeemployment;
++--------------+----------+----------------+------------------+------------------+-------+------------+
+| EmploymentID | PersonID | OrganizationID | EmploymentDate   | TerminationDate  | Bonus | ExtraHours |
++--------------+----------+----------------+------------------+------------------+-------+------------+
+|            3 |     1236 |            903 | 15_MAY_2024      | 15_MAY_2025      |   400 |          8 |
+|            4 |     1237 |            904 | 10_JUNE_2024     | 10_JUNE_2025     |   500 |          3 |
+|            5 |     1238 |            905 | 25_JULY_2024     | 25_JULY_2025     |   600 |          2 |
+|            6 |     1239 |            906 | 05_AUGUST_2024   | 05_AUGUST_2025   |   700 |          7 |
+|            8 |     1241 |            908 | 15_OCTOBER_2024  | 15_OCTOBER_2025  |   900 |          6 |
+|            9 |     1242 |            909 | 30_NOVEMBER_2024 | 30_NOVEMBER_2025 |  1000 |          9 |
+|           10 |     1243 |            910 | 10_DECEMBER_2024 | 10_DECEMBER_2025 |  1100 |          1 |
++--------------+----------+----------------+------------------+------------------+-------+------------+
+7 rows in set (0.00 sec)
+
+mysql> CREATE VIEW PermanentPositions AS
+    -> SELECT pp.PersonPositionID, pp.PersonID, pp.PositionID, pp.StartDate,
+    ->        pp.EndDate, pp.Salary, pp.EmploymentTypeID
+    -> FROM personposition pp
+    -> JOIN EmploymentType et ON pp.EmploymentTypeID = et.EmploymentTypeID
+    -> WHERE et.EmploymentTypeName = 'PERMANENT';
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select* from permanentpositions;
++------------------+----------+------------+---------------+---------------+--------+------------------+
+| PersonPositionID | PersonID | PositionID | StartDate     | EndDate       | Salary | EmploymentTypeID |
++------------------+----------+------------+---------------+---------------+--------+------------------+
+|               12 |     1234 |         11 | 28_MARCH_2023 | 28_MARCH_2025 |   2500 |              901 |
+|               23 |     1245 |         22 | 2025-02-12    | 2026-02-12    |   5000 |              901 |
+|               13 |     1235 |         12 | 2024-04-01    | 2025-04-01    |   3000 |              902 |
+|               18 |     1240 |         17 | 2024-06-20    | 2025-06-20    |   4000 |              907 |
+|               22 |     1244 |         21 | 2025-01-05    | 2026-01-05    |   4800 |              911 |
++------------------+----------+------------+---------------+---------------+--------+------------------+
+5 rows in set (0.01 sec)
+
+mysql> CREATE VIEW PartTimePositions AS
+    -> SELECT pp.PersonPositionID, pp.PersonID, pp.PositionID, pp.StartDate,
+    ->        pp.EndDate, pp.Salary, pp.EmploymentTypeID
+    -> FROM personposition pp
+    -> JOIN EmploymentType et ON pp.EmploymentTypeID = et.EmploymentTypeID
+    -> WHERE et.EmploymentTypeName = 'PART-TIME';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select* from parttimepositions;
++------------------+----------+------------+------------+------------+--------+------------------+
+| PersonPositionID | PersonID | PositionID | StartDate  | EndDate    | Salary | EmploymentTypeID |
++------------------+----------+------------+------------+------------+--------+------------------+
+|               14 |     1236 |         13 | 2024-05-15 | 2025-05-15 |   3200 |              903 |
+|               15 |     1237 |         14 | 2024-06-10 | 2025-06-10 |   3400 |              904 |
+|               16 |     1238 |         15 | 2024-07-25 | 2025-07-25 |   3600 |              905 |
+|               17 |     1239 |         16 | 2024-08-05 | 2025-08-05 |   3800 |              906 |
+|               19 |     1241 |         18 | 2024-10-15 | 2025-10-15 |   4200 |              908 |
+|               20 |     1242 |         19 | 2024-11-30 | 2025-11-30 |   4400 |              909 |
+|               21 |     1243 |         20 | 2024-12-10 | 2025-12-10 |   4600 |              910 |
++------------------+----------+------------+------------+------------+--------+------------------+
+7 rows in set (0.00 sec)
+
+mysql> CREATE VIEW Technical_Positions AS
+    -> SELECT * FROM Positions
+    -> WHERE title IN ('ENGINEER', 'TECHNICIAN', 'DEVELOPER', 'ANALYST', 'DESIGNER');
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from technical_positions;
++------------+------------+----------------+
+| PositionID | Title      | OrganizationID |
++------------+------------+----------------+
+|         12 | ENGINEER   |            902 |
+|         13 | TECHNICIAN |            903 |
+|         14 | DEVELOPER  |            904 |
+|         15 | ANALYST    |            905 |
+|         16 | DESIGNER   |            906 |
++------------+------------+----------------+
+5 rows in set (0.03 sec)
+
+mysql> CREATE VIEW Management_Positions AS
+    -> SELECT * FROM Positions
+    -> WHERE title IN ('SUPERVISOR', 'DIRECTOR', 'ASSISTANT', 'CONSULTANT', 'CEO');
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from management_positions;
++------------+------------+----------------+
+| PositionID | Title      | OrganizationID |
++------------+------------+----------------+
+|         17 | SUPERVISOR |            907 |
+|         18 | DIRECTOR   |            908 |
+|         19 | ASSISTANT  |            909 |
+|         21 | CONSULTANT |            911 |
+|         22 | CEO        |            901 |
++------------+------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE USER 'THABANG'@'localhost' IDENTIFIED BY 'T1234';
+Query OK, 0 rows affected (0.06 sec)
+
+mysql>
+mysql>
+mysql> GRANT SELECT, INSERT ON your_database_name.* TO 'THABANG'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql>
+mysql> CREATE USER 'MANTLOBO'@'localhost' IDENTIFIED BY 'M12345';
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql>
+mysql> GRANT UPDATE, DELETE ON your_database_name.* TO 'MANTLOBO'@'localhost';
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> DELIMITER $$
+mysql>
+mysql> CREATE FUNCTION calculate_total_salary(person_id INT)
+    -> RETURNS DECIMAL(10, 2)
+    -> DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE total_salary DECIMAL(10, 2);
+    ->     DECLARE salary DECIMAL(10, 2);
+    ->     DECLARE bonus DECIMAL(10, 2);
+    ->     DECLARE extra_hours INT;
+    ->
+    ->
+    ->     SELECT Salary INTO salary
+    ->     FROM personemploymenttype
+    ->     WHERE PersonID = person_id
+    ->     LIMIT 1;
+    ->
+    ->
+    ->     SELECT Bonus, ExtraHours INTO bonus, extra_hours
+    ->     FROM employment
+    ->     WHERE PersonID = person_id
+    ->     LIMIT 1;
+    ->
+    ->
+    ->     SET total_salary = salary + (extra_hours * 50) + bonus;  -- Assume 50 per extra hour worked
+    ->
+    ->     RETURN total_salary;
+    -> END $$
+Query OK, 0 rows affected (0.04 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> DELIMITER $$
+mysql>
+mysql> CREATE FUNCTION get_employment_type_name(person_id INT)
+    -> RETURNS VARCHAR(255)
+    -> DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE employment_type_name VARCHAR(255);
+    ->
+    ->
+    ->     SELECT EmploymentTypeName INTO employment_type_name
+    ->     FROM employmenttype et
+    ->     JOIN personemploymenttype pet ON et.EmploymentTypeID = pet.EmploymentTypeID
+    ->     WHERE pet.PersonID = person_id
+    ->     LIMIT 1;
+    ->
+    ->     RETURN employment_type_name;
+    -> END $$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql> DELIMITER $$
+mysql>
+mysql> CREATE PROCEDURE insert_employment(
+    ->     IN p_person_id INT,
+    ->     IN p_organization_id INT,
+    ->     IN p_employment_date DATE,
+    ->     IN p_termination_date DATE,
+    ->     IN p_bonus DECIMAL(10, 2),
+    ->     IN p_extra_hours INT
+    -> )
+    -> BEGIN
+    ->     INSERT INTO employment (PersonID, OrganizationID, EmploymentDate, TerminationDate, Bonus, ExtraHours)
+    ->     VALUES (p_person_id, p_organization_id, p_employment_date, p_termination_date, p_bonus, p_extra_hours);
+    -> END $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql> DELIMITER ;
+mysql>
+mysql> DELIMITER $$
+mysql>
+mysql> CREATE PROCEDURE update_termination_date(
+    ->     IN p_employment_id INT,
+    ->     IN p_new_termination_date DATE
+    -> )
+    -> BEGIN
+    ->     UPDATE employment
+    ->     SET TerminationDate = p_new_termination_date
+    ->     WHERE EmploymentID = p_employment_id;
+    -> END $$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql>
+mysql> DELIMITER ;
+
